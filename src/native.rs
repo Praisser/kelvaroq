@@ -5,7 +5,7 @@ use std::{
     process::{Command, ExitCode},
 };
 use windows::{
-    Win32::System::Console::{AllocConsole, SetConsoleTitleW},
+    Win32::System::Console::{AllocConsole, FreeConsole, SetConsoleTitleW},
     core::w,
 };
 
@@ -77,6 +77,7 @@ pub(crate) fn run(
         // The desktop launcher starts this CLI without a console and captures its
         // stderr for the error dialog. Give the child its own visible log output.
         unsafe {
+            let _ = FreeConsole();
             AllocConsole().context("ouverture du journal Windows")?;
             if desktop_v2 {
                 let caption = format!("Kelvaroq | {}", crate::preload::visual::t("journal"));
